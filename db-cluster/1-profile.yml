@@ -1,0 +1,18 @@
+---
+apiVersion: stackgres.io/v1
+kind: SGInstanceProfile
+metadata:
+  name: instance-profile-nano
+  namespace: default
+spec:
+  cpu: "1"
+  memory: 512Mi
+---
+apiVersion: stackgres.io/v1
+kind: SGInstanceProfile
+metadata:
+  name: instance-profile-medium
+  namespace: default
+spec:
+  cpu: "2"
+  memory: 4Gi

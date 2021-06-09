@@ -1,0 +1,25 @@
+---
+apiVersion: stackgres.io/v1
+kind: SGBackupConfig
+metadata:
+  name: backup-config-minio-backend
+spec:
+  baseBackups:
+    cronSchedule: "* */4 * * *"
+    # cronSchedule: "*/5 * * * *"
+    retention: 1
+  storage:
+    type: s3Compatible
+    s3Compatible:
+      bucket: sg-backups
+      region: k8s
+      enablePathStyleAddressing: true
+      endpoint: http://minio.storage:9000
+      awsCredentials:
+        secretKeySelectors:
+          accessKeyId:
+            key: accesskey
+            name: sg-backup-creds
+          secretAccessKey:
+            key: secretkey
+            name: sg-backup-creds

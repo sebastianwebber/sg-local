@@ -15,3 +15,13 @@ task :setup_stackgres, [] do |t, args|
   ]
   run "helm", "install", "stackgres-operator", chart_url, :namespace => "stackgres", "set" => "grafana.enabled=true", "set-string" => str_args
 end
+
+
+desc "deploy the database"
+task :deploy_database, [] do |t, args|
+  Dir.glob("db-cluster/*.yml").sort_by do |file|
+    file
+  end.each do |f|
+    run "kubectl", "apply", :filename => f
+  end
+end

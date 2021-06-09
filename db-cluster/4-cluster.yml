@@ -1,0 +1,49 @@
+---
+apiVersion: stackgres.io/v1
+kind: SGCluster
+metadata:
+  name: my-db-cluster
+  namespace: default
+spec:
+  # configurations:
+  #   sgBackupConfig: backup-config-minio-backend
+  instances: 2
+  nonProductionOptions:
+    disableClusterPodAntiAffinity: true
+  pods:
+    persistentVolume:
+      size: 10Gi
+  configurations:
+    sgBackupConfig: backup-config-minio-backend
+    sgPostgresConfig: postgres-12-pgbadger-config
+
+  distributedLogs: 
+    sgDistributedLogs: my-distributed-logs
+  postgresVersion: "12.4"
+  prometheusAutobind: false
+  sgInstanceProfile: instance-profile-nano
+  initialData:
+    scripts:
+      - name: create some fake data
+        script: |
+          create table droid(
+            id serial primary key, 
+            name text not null, 
+            model text not null, 
+            creation_date timestamp default now(), 
+            confirmation_text text default 'roger roger' 
+          );
+          create index droid_model_idx on droid (model);
+          create index droid_creation_date_idx on droid (creation_date);
+
+          insert into droid (model, name) select 'Baktoid Combat Automata', format('#%s', generate_series(1,1500000));
+          insert into droid (model, name) select 'Variable Geometry Self-Propelled Battle - Mark I', format('#%s', generate_series(1,1500000));
+          insert into droid (model, name) select 'Droideka', format('#%s', generate_series(1,30000));
+          insert into droid (model, name) select 'T-series military strategic analysis and tactics', format('#%s', generate_series(1,2000));
+
+  postgresServices:
+    primary:
+      type: NodePort
+
+
+
