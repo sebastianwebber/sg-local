@@ -6,6 +6,7 @@ setup_deps = [
   :setup_helm,
   :setup_metallb,
   :setup_minio,
+  :setup_monitoring,
   :setup_stackgres,
 ]
 
